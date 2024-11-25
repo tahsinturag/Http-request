@@ -5,6 +5,7 @@ import { PlacesComponent } from '../places.component';
 import { PlacesContainerComponent } from '../places-container/places-container.component';
 import {HttpClient} from "@angular/common/http";
 import {resetFakeAsyncZone} from "@angular/core/testing";
+import {map} from "rxjs";
 
 @Component({
   selector: 'app-available-places',
@@ -18,27 +19,18 @@ export class AvailablePlacesComponent implements OnInit {
 
   private httpClient = inject(HttpClient);
   private destroyRef = inject (DestroyRef);
-//  1-----
+
   ngOnInit() {
    const subscripion= this.httpClient
      .get<{ places: Place[]}>('http://localhost:3000/places')
+     .pipe(
+       map((resData) => resData.places)
+     )
+     // 2------------
      .subscribe({
-      next: (resData) => {
-        console.log(resData.places);
-
-
-        // ,{
-     // // observe: 'response'
-  //    //     observe: 'events'
-  //
-  // }
-  //    )
-  //    .subscribe({
-  //       next: (event) => {
-  //         console.log(event);
-
-          // console.log(response);
-          // console.log(response.body?.places);
+      next: (places) => {
+      this.places.set(places);
+      //  1-----
         },
       });
     this.destroyRef.onDestroy(() =>{
@@ -46,4 +38,4 @@ export class AvailablePlacesComponent implements OnInit {
     });
   }
 }
-// 2------
+
