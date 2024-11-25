@@ -17,7 +17,7 @@ export class AvailablePlacesComponent implements OnInit {
 
   private httpClient = inject(HttpClient);
   private destroyRef = inject (DestroyRef);
-//  1
+//  1-----
   ngOnInit() {
    const subscripion= this.httpClient.get<{ places: Place[] }>('http://localhost:3000/places').subscribe({
         next: (resData) => {
@@ -29,4 +29,4 @@ export class AvailablePlacesComponent implements OnInit {
     });
   }
 }
-// 2
+// 2------
