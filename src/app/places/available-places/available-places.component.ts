@@ -16,11 +16,15 @@ import {map} from "rxjs";
 })
 export class AvailablePlacesComponent implements OnInit {
   places = signal<Place[] | undefined>(undefined);
+  isFetching = signal(false);
+  // 3-------
 
   private httpClient = inject(HttpClient);
   private destroyRef = inject (DestroyRef);
 
   ngOnInit() {
+    this.isFetching.set(true);
+   //  3---------
    const subscripion= this.httpClient
      .get<{ places: Place[]}>('http://localhost:3000/places')
      .pipe(
@@ -32,6 +36,10 @@ export class AvailablePlacesComponent implements OnInit {
       this.places.set(places);
       //  1-----
         },
+       complete: () => {
+        this.isFetching.set(false);
+       }
+      //  4-------
       });
     this.destroyRef.onDestroy(() =>{
       subscripion.unsubscribe();
